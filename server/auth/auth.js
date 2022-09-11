@@ -100,7 +100,7 @@ var phone=obj.phone
 const existinguser= await db.get().collection(collection.USER_COLLECTION).findOne({token:token});
 console.log(existinguser)
 if(existinguser){
-    await db.get().collection(collection.CHILD_COLLECTION).insertOne({child:phone,parent:existinguser['phone'],});
+    await db.get().collection(collection.CHILD_COLLECTION).insertOne({child:phone,parent:existinguser['phone'],location:""});
     return res.status(200).json({token:token,phone:existinguser['phone']})
 }
 else if(existinguser==null){
@@ -120,8 +120,42 @@ authRouter.post("/parentcheck", async(req,res)=>{
      return res.status(200).json({msg:"CHILD",parent:child.parent})
  }
  else if(parent==null && child==null){
-    return res.status(400).json({msg:"NOT"})
+    return res.status(200).json({msg:"NOT"})
 }
  })
+authRouter.post("/loc_update", async(req,res)=>{
+    console.log("Location..update..")
+location=req.body.location
+user=req.body.user
+var obj=JSON.parse(user)
+var child=obj.phone
+var obj=await db.get().collection(collection.CHILD_COLLECTION).updateOne(
+    {child:child},
+    {
+        $set:{
+            location:location
+        }
+    }
+    );
+if(obj){
+    return res.status(200).json({msg:"Success"})
+}
+    else if(obj==null){
+        return res.status(400).json({msg:"Error"})
+    }
 
+})
+
+authRouter.post("/loc_fetch", async (req,res)=>{
+    console.log("Location...fetch...")
+    user=req.body.user
+var obj=JSON.parse(user)
+var parentph=obj.phone
+const location= await db.get().collection(collection.CHILD_COLLECTION).findOne({parent:parentph});
+if(location){
+return location}
+else if(location==null){
+    return "Error";
+}
+})
 module.exports=authRouter
