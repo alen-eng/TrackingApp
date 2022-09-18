@@ -89,6 +89,9 @@ class _TokenState extends State<TokenEnterForm> {
           validator: (val) => tokenValid,
           decoration: InputDecoration(
             hintText: "Enter Your Token",
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red, width: 5.0),
+            ),
             prefixIcon: Padding(
               padding: const EdgeInsets.all(defaultPadding),
               child: Icon(Icons.token),

@@ -85,7 +85,7 @@ db.get().collection(collection.USER_COLLECTION).updateOne({phone:phone},
 
    })
 .then((response)=>{
-    return res.status(200).json(response)
+    return res.status(200).json(parentoken)
 })
 
 })
@@ -100,7 +100,7 @@ var phone=obj.phone
 const existinguser= await db.get().collection(collection.USER_COLLECTION).findOne({token:token});
 console.log(existinguser)
 if(existinguser){
-    await db.get().collection(collection.CHILD_COLLECTION).insertOne({child:phone,parent:existinguser['phone'],location:""});
+    await db.get().collection(collection.CHILD_COLLECTION).insertOne({child:phone,parent:existinguser['phone'],location:"",battery:""});
     return res.status(200).json({token:token,phone:existinguser['phone']})
 }
 else if(existinguser==null){
@@ -114,7 +114,7 @@ authRouter.post("/parentcheck", async(req,res)=>{
  const parent= await db.get().collection(collection.CHILD_COLLECTION).findOne({parent:phone});
  const child= await db.get().collection(collection.CHILD_COLLECTION).findOne({child:phone});
  if(parent){
-     return res.status(200).json({msg:"PARENT",child:parent.child})
+     return res.status(200).json({msg:"PARENT",child:parent.child,location:parent.location,battery:parent.battery})
  }
  else if(child){
      return res.status(200).json({msg:"CHILD",parent:child.parent})
@@ -127,13 +127,15 @@ authRouter.post("/loc_update", async(req,res)=>{
     console.log("Location..update..")
 location=req.body.location
 user=req.body.user
+battery=req.body.battery
 var obj=JSON.parse(user)
 var child=obj.phone
 var obj=await db.get().collection(collection.CHILD_COLLECTION).updateOne(
     {child:child},
     {
         $set:{
-            location:location
+            location:location,
+            battery:battery
         }
     }
     );

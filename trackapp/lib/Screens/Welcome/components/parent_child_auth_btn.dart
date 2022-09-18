@@ -1,6 +1,9 @@
+//import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/Screens/Home/tokenEnter.dart';
 import 'package:flutter_auth/Screens/Home/tokenScreen.dart';
+import 'package:flutter_auth/Screens/Home/tokencopy.dart';
 import 'package:flutter_auth/authentication/authFunctions.dart';
 import 'package:flutter_auth/providers/authListener.dart';
 import 'package:provider/provider.dart';
@@ -13,16 +16,34 @@ class ParentChildBtn extends StatelessWidget {
   const ParentChildBtn({
     Key? key,
   }) : super(key: key);
-  token_gen() async {
-    var response = await Auth.callTokengen();
-  }
+  // token_gen() async {
+  //   var response = await Auth.callTokengen();
+  //   if (response != null) {
+  //     Navigator.push(context,
+  //   MaterialPageRoute(builder: (context) =>  TokenCopyForm(gentoken: response)),
+  // );
+  //   }
+  // }
 
   // enter_tok() async {
   //   var response = await Auth.callEnterTok();
   // }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+    BuildContext context,
+  ) {
+    token_gen() async {
+      var response = await Auth.callTokengen();
+      if (response != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => TokenCopyForm(gentoken: response)),
+        );
+      }
+    }
+
     return Column(
       children: [
         Hero(

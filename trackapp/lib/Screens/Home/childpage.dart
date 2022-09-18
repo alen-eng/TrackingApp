@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:js';
+//import 'dart:js';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_auth/Screens/Home/parentpage.dart';
@@ -9,6 +9,7 @@ import 'package:flutter_auth/main.dart';
 import 'package:flutter_auth/providers/authListener.dart';
 import 'package:geocode/geocode.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_geocoding/google_geocoding.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
@@ -46,27 +47,33 @@ import 'package:workmanager/workmanager.dart';
 //     }
 
 class Location {
-  Future getAddress(double? lat, double? lang) async {
+  Future getAddress(double? lat, double? lang, int? level) async {
     print(lang);
     print(lat);
-    if (lat == null || lang == null) return "";
-    GeoCode geoCode = GeoCode();
-    Address address =
-        await geoCode.reverseGeocoding(latitude: lat, longitude: lang);
+    //if (lat != null && lang != null) {
+    var googleGeocoding =
+        GoogleGeocoding("AIzaSyAvfsq8qrODatb8LJTR3fIgjt2WpqmbW4c");
+    var address =
+        await googleGeocoding.geocoding.getReverse(LatLon(lat!, lang!));
 
+    // GeoCode geoCode = GeoCode();
+    // Address address =
+    //     await geoCode.reverseGeocoding(latitude: lat, longitude: lang);
+    print("Hi");
     print(address);
     SharedPreferences shared_User = await SharedPreferences.getInstance();
     var user = shared_User.getString('user');
     var obj = jsonDecode(user!);
     var pc = await Auth.callParentCheck(phone: obj['phone']);
     if (pc['msg'] == "CHILD") {
-      var res = await Auth.updateLocation(
-        location: address.city,
-      );
+      print("child");
+      var res =
+          await Auth.updateLocationBattery(location: address, battery: level);
     }
-    return "${address.streetAddress}, ${address.city}, ${address.countryName}, ${address.postal}";
   }
+  // return "";
 }
+//}
 //     return Future.value(true);
 //   });
 // }
@@ -167,7 +174,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 TextButton(
                   child: const Text('Location'),
                   onPressed: () {
-                    //callbackDispatcher();
                     // loc(); /* ... */
                   },
                 ),

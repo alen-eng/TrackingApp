@@ -58,14 +58,17 @@ class _LoginState extends State<LoginForm> {
         Provider.of<AuthListen>(this.context, listen: false).parentUser();
         //Navigator.pop(context);
         var phone = pc['child'];
+        var location = pc['location'];
+        var battery = pc['battery'];
         // ignore: use_build_context_synchronously
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) {
               return Parent(
-                phone: pc['child'],
-              );
+                  phone: pc['child'],
+                  location: pc['location'],
+                  battery: pc['battery']);
             },
           ),
         );

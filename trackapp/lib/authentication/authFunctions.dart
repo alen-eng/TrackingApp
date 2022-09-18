@@ -107,6 +107,9 @@ class Auth {
       var response = await http.post(Uri.parse("$url/tokengen"),
           body: user,
           headers: <String, String>{'content-type': "application/json"});
+      if (response != null) {
+        return response.body;
+      }
     } catch (e) {
       return "Error";
     }
@@ -174,13 +177,14 @@ class Auth {
     }
   }
 
-  static Future updateLocation({required location}) async {
+  static Future updateLocationBattery(
+      {required location, required battery}) async {
     http.Response response;
     print(location);
     try {
       SharedPreferences shared_User = await SharedPreferences.getInstance();
       var user = shared_User.getString('user');
-      var data = {"location": location, "user": user};
+      var data = {"location": location, "user": user, "battery": battery};
       var se = jsonEncode(data);
       var response = await http.post(Uri.parse("$url/loc_update"),
           body: se,
