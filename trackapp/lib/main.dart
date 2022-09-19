@@ -77,7 +77,7 @@ callbackDispatcher() {
               await Auth.updateLocationBattery(location: add, battery: battery);
         }
         // var googleGeocoding =
-        //     GoogleGeocoding("AIzaSyAvfsq8qrODatb8LJTR3fIgjt2WpqmbW4c");
+        //     GoogleGeocoding("");
         // var address =
         //     await googleGeocoding.geocoding.getReverse(LatLon(lat, lang));
         // print(address);
